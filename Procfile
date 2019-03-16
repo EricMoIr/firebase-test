@@ -1,1 +1,1 @@
-web: sudo yarn start
+web: yarn start
