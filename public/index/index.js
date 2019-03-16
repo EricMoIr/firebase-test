@@ -1,3 +1,4 @@
+let messaging;
 async function init() {
     // Initialize Firebase
     const config = {
@@ -11,7 +12,7 @@ async function init() {
     firebase.initializeApp(config);
     // [START get_messaging_object]
     // Retrieve Firebase Messaging object.
-    const messaging = firebase.messaging();
+    messaging = firebase.messaging();
     // [END get_messaging_object]
     // [START set_public_vapid_key]
     // Add the public key generated from the console here.
@@ -163,7 +164,7 @@ async function init() {
     async function createToken() {
         try {
             await messaging.getToken();
-        } catch(error) {
+        } catch (error) {
             console.error("Couldn't create token");
         }
     }
@@ -236,10 +237,12 @@ async function init() {
 }
 
 (async function () {
-    try {
-        $(document).ready(async () => await init());
-    } catch (error) {
-        console.error("Error while starting the app");
-        console.error(error);
-    }
+    $(document).ready(async () => {
+        try {
+            await init();
+        } catch (error) {
+            console.error("Error while starting the app");
+            console.error(error);
+        }
+    });
 })();
