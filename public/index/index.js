@@ -61,12 +61,14 @@ async function init() {
 
     function resetUI() {
         clearMessages();
+        $("#token").hide();
         $("#loading").show();
         // [START get_token]
         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
         messaging.getToken().then(function (currentToken) {
             $("#loading").hide();
+            $("#token").show();
             if (currentToken) {
                 sendTokenToServer(currentToken);
                 updateUIForPushEnabled(currentToken);
@@ -197,14 +199,14 @@ async function init() {
     }
 
     function updateUIForPushEnabled(currentToken) {
-        showHideDiv(tokenDivId, true);
-        showHideDiv(permissionDivId, false);
-        showToken(currentToken);
+        // showHideDiv(tokenDivId, true);
+        // showHideDiv(permissionDivId, false);
+        // showToken(currentToken);
     }
 
     function updateUIForPushPermissionRequired() {
-        showHideDiv(tokenDivId, false);
-        showHideDiv(permissionDivId, true);
+        // showHideDiv(tokenDivId, false);
+        // showHideDiv(permissionDivId, true);
     }
 
     function initButtons() {
