@@ -48,5 +48,6 @@ function sendNotification(registrationToken) {
     return admin.messaging().send(message);
 }
 
-const server = https.createServer(certOptions, app)
-server.listen(443);
+app.listen(8000, () => console.log("App started listening"));
+// const server = https.createServer(certOptions, app)
+// server.listen(443);
