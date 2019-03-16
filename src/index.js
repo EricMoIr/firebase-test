@@ -6,7 +6,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const serviceAccount = require("./test-41eff-firebase-adminsdk-zy78b-0dbab16830.json");
 
-const PORT = process.env.port || 443;
+const PORT = process.env.port || 9001;
 
 // const certOptions = {
 //   key: fs.readFileSync(path.resolve('cert/server.key')),
