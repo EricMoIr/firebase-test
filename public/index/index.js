@@ -19,7 +19,6 @@ async function init() {
     // [END set_public_vapid_key]
 
     // IDs of divs that display Instance ID token UI or request permission UI.
-    const tokenDivId = 'token_div';
     const permissionDivId = 'permission_div';
 
     resetUI();
@@ -62,11 +61,12 @@ async function init() {
 
     function resetUI() {
         clearMessages();
-        showToken('loading...');
+        $("#loading").show();
         // [START get_token]
         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
         messaging.getToken().then(function (currentToken) {
+            $("#loading").hide();
             if (currentToken) {
                 sendTokenToServer(currentToken);
                 updateUIForPushEnabled(currentToken);
@@ -87,6 +87,7 @@ async function init() {
 
 
     function showToken(currentToken) {
+        return;
         // Show token in console and UI.
         var tokenElement = document.querySelector('#token');
         tokenElement.textContent = currentToken;
@@ -116,6 +117,7 @@ async function init() {
     }
 
     function showHideDiv(divId, show) {
+        return;
         const div = document.querySelector('#' + divId);
         if (show) {
             div.style = 'display: visible';
@@ -141,26 +143,37 @@ async function init() {
         // [END request_permission]
     }
 
-    function deleteToken() {
+    async function deleteToken() {
+        $("#token").empty();
+        return new Promise((resolve, reject) => {
+            messaging.getToken().then((token) => {
+                messaging.deleteToken(token).then(() => {
+                    resolve();
+                    setTokenSentToServer(false);
+                });
+            }).catch((error) => {
+                console.error("Couldn't delete token");
+                reject(error);
+            });
+        });
+    }
+
+    async function createToken() {
+        try {
+            await messaging.getToken();
+        } catch(error) {
+            console.error("Couldn't create token");
+        }
+    }
+
+    async function resetToken() {
         // Delete Instance ID token.
         // [START delete_token]
-        messaging.getToken().then(function (currentToken) {
-            messaging.deleteToken(currentToken).then(function () {
-                console.log('Token deleted.');
-                setTokenSentToServer(false);
-                // [START_EXCLUDE]
-                // Once token is deleted update UI.
-                resetUI();
-                // [END_EXCLUDE]
-            }).catch(function (err) {
-                console.log('Unable to delete token. ', err);
-            });
-            // [END delete_token]
-        }).catch(function (err) {
-            console.log('Error retrieving Instance ID token. ', err);
-            showToken('Error retrieving Instance ID token. ', err);
-        });
-
+        $("#loading").show();
+        await deleteToken();
+        await createToken();
+        $("#loading").hide();
+        resetUI();
     }
 
     // Add a message to the messages element.
@@ -209,6 +222,7 @@ async function init() {
         }
 
         $("#requestPermission").click(requestPermission);
+        $("#resetToken").click(resetToken);
         $("#deleteToken").click(deleteToken);
         $("#notifNow").click(async () => {
             await askNotif(0);
