@@ -7,8 +7,8 @@ const serviceAccount = require("./test-41eff-firebase-adminsdk-zy78b-0dbab16830.
 const https = require('https');
 
 const certOptions = {
-  key: fs.readFileSync(path.resolve('build/cert/server.key')),
-  cert: fs.readFileSync(path.resolve('build/cert/server.crt'))
+  key: fs.readFileSync(path.resolve('cert/server.key')),
+  cert: fs.readFileSync(path.resolve('cert/server.crt'))
 };
 
 admin.initializeApp({
