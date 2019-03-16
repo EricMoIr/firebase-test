@@ -1,10 +1,10 @@
+const fs = require('fs')
+const path = require('path')
+const https = require('https');
 const admin = require("firebase-admin");
 const express = require("express");
 const bodyParser = require("body-parser");
-const fs = require('fs')
-const path = require('path')
 const serviceAccount = require("./test-41eff-firebase-adminsdk-zy78b-0dbab16830.json");
-const https = require('https');
 
 const certOptions = {
   key: fs.readFileSync(path.resolve('cert/server.key')),
