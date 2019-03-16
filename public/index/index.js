@@ -18,17 +18,14 @@ async function init() {
     // Add the public key generated from the console here.
     messaging.usePublicVapidKey('BLF5AhWEZSyXmctrqT62GYC3kI47r-ZqEtmm0zKWLAcR2yyvO5hvQPIJLEaADAqqDGPSnbLmi5qNyywpDfYD54s');
     // [END set_public_vapid_key]
-
-    // IDs of divs that display Instance ID token UI or request permission UI.
-    const permissionDivId = 'permission_div';
-
-    resetUI();
     initButtons();
+    await requestPermission();
+    resetUI();
 
     // [START refresh_token]
     // Callback fired if Instance ID token is updated.
     messaging.onTokenRefresh(function () {
-        messaging.getToken().then(function (refreshedToken) {
+        createToken().then(function (refreshedToken) {
             console.log('Token refreshed.');
             // Indicate that the new Instance ID token has not yet been sent to the
             // app server.
@@ -67,7 +64,7 @@ async function init() {
         // [START get_token]
         // Get Instance ID token. Initially this makes a network call, once retrieved
         // subsequent calls to getToken will return from cache.
-        messaging.getToken().then(function (currentToken) {
+        createToken().then(function (currentToken) {
             $("#loading").hide();
             $("#token").show();
             if (currentToken) {
@@ -129,27 +126,27 @@ async function init() {
         }
     }
 
-    function requestPermission() {
+    async function requestPermission() {
         console.log('Requesting permission...');
         // [START request_permission]
-        messaging.requestPermission().then(function () {
+        try {
+            await messaging.requestPermission();
             console.log('Notification permission granted.');
             // TODO(developer): Retrieve an Instance ID token for use with FCM.
             // [START_EXCLUDE]
             // In many cases once an app has been granted notification permission, it
             // should update its UI reflecting this.
             resetUI();
-            // [END_EXCLUDE]
-        }).catch(function (err) {
+        } catch(err) {
             console.log('Unable to get permission to notify.', err);
-        });
+        };
         // [END request_permission]
     }
 
     async function deleteToken() {
         $("#token").empty();
         return new Promise((resolve, reject) => {
-            messaging.getToken().then((token) => {
+            createToken().then((token) => {
                 messaging.deleteToken(token).then(() => {
                     resolve();
                     setTokenSentToServer(false);
@@ -163,7 +160,8 @@ async function init() {
 
     async function createToken() {
         try {
-            await messaging.getToken();
+            await messaging.requestPermission();
+            return await messaging.getToken();
         } catch (error) {
             console.error("Couldn't create token");
         }
@@ -218,13 +216,12 @@ async function init() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    token: await messaging.getToken(),
+                    token: await createToken(),
                     timeout,
                 }),
             });
         }
 
-        $("#requestPermission").click(requestPermission);
         $("#resetToken").click(resetToken);
         $("#deleteToken").click(deleteToken);
         $("#notifNow").click(async () => {
