@@ -6,6 +6,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const serviceAccount = require("./test-41eff-firebase-adminsdk-zy78b-0dbab16830.json");
 
+const PORT = process.env.port || 443;
+
 // const certOptions = {
 //   key: fs.readFileSync(path.resolve('cert/server.key')),
 //   cert: fs.readFileSync(path.resolve('cert/server.crt'))
@@ -48,6 +50,6 @@ function sendNotification(registrationToken) {
     return admin.messaging().send(message);
 }
 
-app.listen(8000, () => console.log("App started listening"));
+app.listen(PORT, () => console.log("App started listening"));
 // const server = https.createServer(certOptions, app)
 // server.listen(443);
