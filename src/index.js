@@ -41,10 +41,10 @@ function queueNotification(token, timeout) {
 
 async function sendNotification(to) {
     const notification = {
-      'title': 'Portugal vs. Denmark',
-      'body': '5 to 1',
-      'icon': 'firebase-logo.png',
-      'click_action': 'https://localhost:5000'
+      "title": "Hey!",
+      "body": "The project's going to be so easy :D",
+      "icon": "firebase-logo.png",
+      "click_action": "https://test-push-notifications.herokuapp.com/"
     };
     try {
         const data = {
@@ -65,17 +65,6 @@ async function sendNotification(to) {
     } catch(error) {
         console.log(error);
     }
-    // var message = {
-    //     notification: {
-    //         title: '$GOOG up 1.43% on the day',
-    //         body: '$GOOG gained 11.80 points to close at 835.67, up 1.43% on the day.',
-    //     },
-    //     token: registrationToken
-    // };
-
-    // // Send a message to the device corresponding to the provided
-    // // registration token.
-    // return admin.messaging().send(message);
 }
 
 app.listen(PORT, () => console.log("App started listening"));
